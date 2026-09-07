@@ -387,12 +387,16 @@
         align-items: center;
     }
 
+    /* 1. 顶部模式切换栏与九宫格之间增加 8px 距离 */
+    .header-info, .mode-switch-group, .board-wrapper {
+        margin-bottom: 8px !important;
+    }
+
     #sudoku-board, .sudoku-board {
         width: 92vw !important;
         height: 92vw !important;
         max-width: 360px !important;
         max-height: 360px !important;
-        margin-bottom: 0 !important; 
     }
     .board-wrapper {
         width: 92vw !important;
@@ -405,11 +409,21 @@
         box-sizing: border-box;
     }
 
-    .header-info, .stats-bar {
+    .header-info {
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
-        margin: 0 !important; 
+        padding: 0 4px !important;
+        font-size: 13px;
+        line-height: 1.2 !important;
+    }
+
+    /* 2. 错误那一行（状态栏）到九宫格的距离翻一倍 */
+    .stats-bar {
+        display: flex !important;
+        justify-content: space-around !important; 
+        align-items: center !important;
+        margin-top: 16px !important; /* 间距翻倍 */
         padding: 0 4px !important;
         font-size: 13px;
         line-height: 1.2 !important;
@@ -425,17 +439,24 @@
         width: 48px !important;
         height: 32px !important;
         border-radius: 6px;
-        color: #333 !important; /* 修复手机上图标变白问题 */
+        color: #333 !important;
     }
     .tools-bar .tool-btn svg {
-        fill: #333 !important; /* 强制 SVG 图标为深色 */
+        fill: #333 !important;
     }
 
-    /* 数字键盘整体间距微调 */
+    /* 4. 手机端直接屏蔽/隐藏“对勾”按钮（假设其带有 check 类或特定属性，可按实际类名微调） */
+    .tools-bar .tool-btn.check-btn, 
+    .tools-bar .tool-btn[data-action="check"],
+    .tools-bar .tool-btn:last-child { 
+        display: none !important; 
+    }
+
+    /* 数字键盘整体排布 */
     .numpad, .number-pad {
         display: flex !important;
         justify-content: space-between !important;
-        gap: 4px !important;
+        gap: 2px !important;
         margin: 8px 0 !important; 
     }
 
@@ -452,24 +473,17 @@
         color: inherit;
     }
 
-    /* 针对 2、5、7 两边适当拉大间距，3/4 与 6/7 缩窄 */
-    .num-btn:nth-child(2),
-    .num-btn:nth-child(5),
-    .num-btn:nth-child(7) {
-        margin-left: 3px !important;
-        margin-right: 6px !important;
-    }
-
+    /* 3. 数字按钮 3/4 之间、8/9 之间再放大一点点（通过给第 3 个和第 8 个按钮加额外的右边距） */
     .num-btn:nth-child(3),
-    .num-btn:nth-child(6) {
-        margin-right: 2px !important;
+    .num-btn:nth-child(8) {
+        margin-right: 10px !important; 
     }
 
     .num-btn:last-child {
         margin-right: 0 !important;
     }
 
-    /* 第四点：“新游戏”按钮往下显著拉开距离，防止误触 */
+    /* “新游戏”按钮往下显著拉开距离 */
     .new-game-btn, .action-btn {
         margin-top: 16px !important; 
         padding: 10px !important;
