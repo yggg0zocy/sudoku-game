@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>专业多模式数独</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sudoku-container">
+    <div class="left-panel">
+        <div class="header-info">
+            <div class="mode-switch-group">
+    <button id="btn-classic" class="mode-btn active" onclick="requestSwitchMode('classic')">经 典</button>
+    <button id="btn-blank" class="mode-btn" onclick="requestSwitchMode('blank')">空 白</button>
+    <button id="btn-diagonal" class="mode-btn" onclick="requestSwitchMode('diagonal')">对角线</button>
+    <button id="btn-ultimate" class="mode-btn" onclick="requestSwitchMode('ultimate')">终 极</button>
+</div>
+            <div id="loading-tip" style="color: #e53935; font-size: 12px; display: none;">生成中...</div>
+        </div>
+        
+        <div class="board-wrapper">
+            <div id="sudoku-board"></div>
+            <svg id="line-svg">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="12" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+                    </marker>
+                    <marker id="blue-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3b82f6" />
+                    </marker>
+                </defs>
+            </svg>
+        </div>
+</div>
+    <div class="right-panel">
+        <div class="stats-bar">
+            <div id="errors-container">错误: <span id="error-count">0/3</span></div>
+    <div id="score-container">得分: <span id="score">0</span></div>
+    <div id="timer-container">时间: <span id="timer">00:00</span><span id="pause-btn" onclick="togglePause()" style="cursor:pointer; margin-left:4px;">❚❚</span></div>
+        </div>
+
+        <div class="tools-bar">
+    <!-- 撤销按钮 -->
+    <button class="tool-btn" onclick="undo()" style="background-color: #e3f2fd; color: #1565c0;" title="撤销">↩️</button>
+    
+    <!-- 笔记模式按钮 -->
+    <button class="tool-btn" id="notes-mode-btn" onclick="toggleNotesMode()" style="background-color: #fff3e0; color: #ef6c00; position: relative;" title="笔记">
+        <span class="badge" id="notes-badge">OFF</span>
+        ✏️
+    </button>
+    
+    <!-- 一键备选按钮 -->
+    <button class="tool-btn" onclick="fillAllNotes()" style="background-color: #e8f5e9; color: #2e7d32;" title="一键备选">✨</button>
+    
+    <!-- 链式推理按钮 -->
+    <button class="tool-btn" id="clear-btn" onclick="toggleChainMode()" style="background-color: #f3e8ff; color: #7e22ce;" title="链式推理">🔗</button>
+</div>
+
+        <div class="number-pad">
+    <button class="num-btn" onclick="inputNumber(1)">1</button>
+    <button class="num-btn" onclick="inputNumber(2)">2</button>
+    <button class="num-btn" onclick="inputNumber(3)">3</button>
+    <button class="num-btn" onclick="inputNumber(4)">4</button>
+    <button class="num-btn" onclick="inputNumber(5)">5</button>
+    <button class="num-btn" onclick="inputNumber(6)">6</button>
+    <button class="num-btn" onclick="inputNumber(7)">7</button>
+    <button class="num-btn" onclick="inputNumber(8)">8</button>
+    <button class="num-btn" onclick="inputNumber(9)">9</button>
+</div>
+       <button class="new-game-btn" onclick="startNewGame()">新游戏</button>
+    </div>
+</div>
+
+<!-- 切换玩法安全确认弹窗 -->
+<div id="switch-modal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 style="margin-top:0; color:#333;">切换玩法确认</h3>
+        <p style="color:#666; font-size:14px;">切换玩法将重置当前的对局进度，是否确认切换？</p>
+        <div class="modal-buttons">
+            <button class="modal-btn cancel" onclick="closeModal()">取消</button>
+            <button class="modal-btn confirm" onclick="confirmSwitchMode()">确认切换</button>
+        </div>
+    </div>
+</div>
+
+<!-- 脚本引入：动作层与游戏逻辑层 -->
+<script src="core.js"></script>
+<script src="classic.js"></script>
+<script src="diagonal.js"></script>
+<script src="ultimate.js"></script>
+</body>
+</html>
