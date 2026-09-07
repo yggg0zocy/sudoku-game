@@ -476,6 +476,16 @@
         padding: 10px !important;
         font-size: 15px;
     }
+/* 数独行、列、宫完成时的闪烁脉冲动效 */
+    @keyframes sudoku-complete-pulse {
+        0% { background-color: rgba(76, 175, 80, 0.6); transform: scale(1); }
+        50% { background-color: rgba(76, 175, 80, 0.9); transform: scale(1.03); }
+        100% { background-color: inherit; transform: scale(1); }
+    }
+
+    .cell-completed-anim {
+        animation: sudoku-complete-pulse 0.5s ease-in-out;
+    }
 }
     </style>
 </head>

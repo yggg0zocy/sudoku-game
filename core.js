@@ -238,8 +238,19 @@ window.updateNumberCompletionStatus = function() {
         // 获取按钮代表的数字（兼容文本内容或属性）
         const num = parseInt(btn.textContent.trim() || btn.dataset.num);
         if (num >= 1 && num <= 9) {
+            const isCurrentlyCompleted = btn.classList.contains('completed');
+            
             if (counts[num] >= 9) {
                 btn.classList.add('completed');
+                
+                // 【在这里加】：如果它之前没有完成，而现在刚好达到 9 个，触发一次闪烁！
+                if (!isCurrentlyCompleted) {
+                    btn.classList.remove('cell-completed-anim');
+                    void btn.offsetWidth; // 触发重绘
+                    btn.classList.add('cell-completed-anim');
+                    setTimeout(() => btn.classList.remove('cell-completed-anim'), 500);
+                }
+
             } else {
                 btn.classList.remove('completed');
             }
@@ -280,3 +291,62 @@ window.inputNumber = function(num) {
             break;
     }
 };
+//==================8. 检查并触发行列宫完成动效===========
+function checkAndAnimateCompletion(row, col) {
+    // 假设你的单元格 DOM 带有类似 data-row 和 data-col 属性，或者你可以根据索引直接获取
+    // 这里以标准网格查找为例：
+    const getCell = (r, c) => {
+        const board = document.getElementById('sudoku-board');
+        if (!board) return null;
+        // 如果你的格子是按顺序排列的 0-80
+        return board.children[r * 9 + c];
+    };
+
+    const triggerAnim = (cells) => {
+        cells.forEach(cell => {
+            if (!cell) return;
+            cell.classList.remove('cell-completed-anim');
+            void cell.offsetWidth; // 触发重绘
+            cell.classList.add('cell-completed-anim');
+        });
+        setTimeout(() => {
+            cells.forEach(cell => {
+                if (cell) cell.classList.remove('cell-completed-anim');
+            });
+        }, 500);
+    };
+
+    // 1. 检查当前行 (row) 是否填满
+    let rowCells = [];
+    let rowComplete = true;
+    for (let c = 0; c < 9; c++) {
+        let cell = getCell(row, c);
+        if (!cell || !cell.textContent.trim()) { rowComplete = false; break; }
+        rowCells.push(cell);
+    }
+    if (rowComplete) triggerAnim(rowCells);
+
+    // 2. 检查当前列 (col) 是否填满
+    let colCells = [];
+    let colComplete = true;
+    for (let r = 0; r < 9; r++) {
+        let cell = getCell(r, col);
+        if (!cell || !cell.textContent.trim()) { colComplete = false; break; }
+        colCells.push(cell);
+    }
+    if (colComplete) triggerAnim(colCells);
+
+    // 3. 检查当前 3x3 宫是否填满
+    let boxRowStart = Math.floor(row / 3) * 3;
+    let boxColStart = Math.floor(col / 3) * 3;
+    let boxCells = [];
+    let boxComplete = true;
+    for (let r = boxRowStart; r < boxRowStart + 3; r++) {
+        for (let c = boxColStart; c < boxColStart + 3; c++) {
+            let cell = getCell(r, c);
+            if (!cell || !cell.textContent.trim()) { boxComplete = false; break; }
+            boxCells.push(cell);
+        }
+    }
+    if (boxComplete) triggerAnim(boxCells);
+}
