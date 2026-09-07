@@ -12,6 +12,10 @@ window.initDiagonal = function() {
         solution.fill(0);
         initialBoard.fill(0);
 
+        // 🔧 修复：新开一局对角线模式时，清空数字按钮的"已填满9个"锁定状态，
+        // 防止从其他模式切换过来时，残留的 completed 状态把按钮锁死。
+        document.querySelectorAll('.num-btn').forEach(btn => btn.classList.remove('completed'));
+
         // 严格锁定 17-22 个线索
         const targetClues = Math.floor(Math.random() * 6) + 17; 
         generateDiagonalSudoku(targetClues);
@@ -377,6 +381,12 @@ window.diagonalInputNumber = function(num){
         if (board[selectedIndex] === num) return;
         board[selectedIndex] = num;
 
+        // 🔧 修复：对角线模式此前从没调用过这个函数，导致"某数字填满9个后按钮变灰锁定"
+        // 这个全局功能在对角线模式里完全没生效。和经典模式保持一致，填数后立刻刷新一次。
+        if (typeof updateNumberCompletionStatus === 'function') {
+            updateNumberCompletionStatus();
+        }
+
         const row = Math.floor(selectedIndex / 9);
         const col = selectedIndex % 9;
         
@@ -418,7 +428,7 @@ window.diagonalInputNumber = function(num){
             return;
         } else {
             score += 50;
-            const scoreEl = document.getElementById('score-val');
+            const scoreEl = document.getElementById('score');
             if (scoreEl) scoreEl.textContent = score;
         }
     }
