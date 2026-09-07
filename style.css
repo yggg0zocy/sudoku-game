@@ -366,6 +366,7 @@ body {
     body { 
         padding: 4px 8px; 
         align-items: flex-start; 
+        background-color: #ffcccc !important;
     }
 
     /* 2. 主容器：纵向排列，取消卡片阴影和背景，拉近整体间距 */
