@@ -362,9 +362,9 @@ body {
 
 /* ==================== 手机端专属响应式布局调整 ==================== */
 @media (max-width: 720px) {
-    /* 1. 整体页面：顶部留出刚好 5px 的呼吸感，不贴死 */
+    /* 1. 整体页面：顶部 8px 呼吸感 */
     body { 
-        padding: 5px 8px 10px 8px !important; 
+        padding: 8px 8px 10px 8px !important; 
         align-items: flex-start !important; 
     }
 
@@ -387,67 +387,78 @@ body {
         align-items: center;
     }
 
-    /* 2. 棋盘大小控制 */
+    /* 2. 棋盘尺寸 */
     .sudoku-board {
         width: 92vw !important;
         height: 92vw !important;
         max-width: 360px !important;
         max-height: 360px !important;
-        margin-bottom: 2px !important; 
+        margin-bottom: 2px !important; /* 紧贴棋盘底部 */
     }
 
-    /* 统一所有控制行的最大宽度，确保它们上下居中对齐 */
+    /* 统一所有控制行的最大宽度 */
     .status-bar, .game-info, .tools-bar, .action-tools, .secondary-controls, .numpad, .number-pad, .new-game-btn, .action-btn {
         width: 92vw !important;
         max-width: 360px !important;
         box-sizing: border-box;
     }
 
-    /* 3. 错误/得分/时间这行：变量均匀隔开，且拉近与上下的距离 */
+    /* 3. 错误行：上下边距压到极限（1px 和 2px），彻底拉近距离！ */
     .status-bar, .game-info {
         display: flex !important;
-        justify-content: space-between !important; /* 让错误、得分、时间三者左右撑开 */
+        justify-content: space-around !important; 
         align-items: center !important;
-        margin: 2px auto 4px auto !important; /* 上下距离压缩 */
-        padding: 0 4px !important;
+        margin: 1px auto 2px auto !important; /* 上下空间压缩到极窄 */
+        padding: 0 8px !important;
         font-size: 13px;
     }
 
-    /* 4. 四个功能按钮：减小间距、整体居中 */
+    /* 4. 四个功能按钮：居中、拉近 */
     .tools-bar, .action-tools, .secondary-controls {
         display: flex !important;
-        justify-content: center !important; /* 整体居中 */
-        gap: 8px !important; /* 控制四个按钮之间的间距，不再离太开 */
+        justify-content: center !important;
+        gap: 6px !important; 
         margin-bottom: 4px !important;
     }
     .tools-bar button, .action-tools button {
-        width: 54px !important; /* 给个固定或自适应适中的宽度 */
-        height: 36px !important;
-        border-radius: 8px;
+        width: 50px !important;
+        height: 34px !important;
+        border-radius: 6px;
     }
 
-    /* 5. 数字那一排：调窄宽度，彻底解决 3、4 和 6、7 粘连的问题，强制均分间距 */
+    /* 5. 数字键盘：调窄、压扁、修复 3-4 和 6-7 粘连 */
     .numpad, .number-pad {
         display: flex !important;
         justify-content: space-between !important;
-        gap: 4px !important; /* 强制每个数字键之间保留固定间距，修复粘连 */
+        gap: 3px !important;
         margin-bottom: 6px !important; 
     }
 
     .num-btn {
         flex: 1 !important;
-        min-width: 0 !important; /* 防止内容把按钮撑变形 */
-        height: 42px !important;
-        font-size: 18px !important;
+        min-width: 0 !important;
+        height: 36px !important;
+        font-size: 17px !important;
         font-weight: bold;
-        padding: 0 !important; /* 去除多余内边距，防止挨太近 */
+        padding: 0 !important;
         border-radius: 6px;
+        margin-right: 4px !important;
+    }
+
+    /* 针对 3与4、6与7 独立放大间距 */
+    .num-btn:nth-child(3),
+    .num-btn:nth-child(6) {
+        margin-right: 12px !important; 
+    }
+
+    .num-btn:last-child {
+        margin-right: 0 !important;
     }
 
     /* 底部新游戏按钮 */
     .new-game-btn, .action-btn {
         margin-top: 2px !important;
-        padding: 10px !important;
+        padding: 9px !important;
         font-size: 15px;
     }
 }
