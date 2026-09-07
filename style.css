@@ -362,75 +362,77 @@ body {
 
 /* ==================== 手机端专属响应式布局调整 ==================== */
 @media (max-width: 720px) {
-    /* 1. 整体页面：压缩上下内边距，让内容紧贴顶部，消除大面积留白 */
+    /* 1. 整体页面：压缩上下内边距，让内容紧贴顶部 */
     body { 
-        padding: 4px 8px; 
-        align-items: flex-start; 
-        background-color: #ffcccc !important;
+        padding: 2px 6px !important; 
+        align-items: flex-start !important; 
     }
 
-    /* 2. 主容器：纵向排列，取消卡片阴影和背景，拉近整体间距 */
+    /* 2. 主容器：纵向排列，彻底消除上下无效留白 */
     .sudoku-container {
         flex-direction: column;
-        padding: 4px;
-        gap: 8px; /* 缩小模块之间的上下间距 */
+        padding: 0 !important;
+        gap: 4px !important; /* 模块之间的间距压到最小 */
         background: transparent;
         box-shadow: none;
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* 3. 左右面板：通栏显示 */
-    .left-panel { 
-        max-width: 100%; 
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    /* 3. 顶部模式选择区域：贴顶显示 */
+    .mode-selector, .tabs-container, .game-modes {
+        margin-top: 0 !important;
+        margin-bottom: 4px !important;
     }
-    
-    .right-panel { 
-        width: 100%; 
-        padding-top: 0; 
+
+    /* 4. 左右面板通栏 */
+    .left-panel, .right-panel { 
+        width: 100% !important; 
+        max-width: 100% !important;
+        padding: 0 !important;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    /* 4. 棋盘尺寸：限制最大宽度，和下方内容保持紧凑 */
+    /* 5. 棋盘尺寸与紧随的下方间距 */
     .sudoku-board {
         width: 92vw !important;
         height: 92vw !important;
-        max-width: 380px !important;
-        max-height: 380px !important;
-        margin-bottom: 4px !important; /* 🟢 大幅拉近棋盘与下方状态栏/功能区的距离 */
+        max-width: 360px !important;
+        max-height: 360px !important;
+        margin-bottom: 2px !important; /* 🟢 极度拉近棋盘与下方状态栏的距离 */
     }
 
-    /* 5. 状态栏和功能区：统一样式宽度，整洁排列 */
+    /* 6. 状态栏和功能区宽度统一 */
     .status-bar, .game-info, .tools-bar, .action-tools, .secondary-controls, .numpad, .number-pad, .new-game-btn, .action-btn {
         width: 92vw !important;
-        max-width: 380px !important;
+        max-width: 360px !important;
         box-sizing: border-box;
     }
 
-    /* 6. 功能图标行与数字键盘的间距 */
+    /* 7. 内部各行组件的极简间距 */
+    .status-bar, .game-info {
+        margin: 2px 0 4px 0 !important;
+    }
+
     .tools-bar, .action-tools, .secondary-controls {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 6px !important;
+        margin-bottom: 4px !important;
     }
     
     .numpad, .number-pad {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px !important; /* 离底部新游戏按钮保留适度安全距离 */
+        margin-bottom: 8px !important; 
     }
 
-    /* 7. 按钮尺寸微调，提升手机点击手感 */
+    /* 8. 按钮高度及手感优化 */
     .num-btn {
         flex: 1;
-        height: 46px;
-        font-size: 20px;
+        height: 44px;
+        font-size: 19px;
         font-weight: bold;
     }
 }
