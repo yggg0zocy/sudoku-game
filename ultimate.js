@@ -395,31 +395,13 @@ function isValidKillerPlacement(grid, index, num) {
 
     return true;
 }
-
-window.toggleNotesMode = function() {
-    isNotesMode = !isNotesMode;
-    const btn = document.getElementById('notes-mode-btn');
-    const badge = document.getElementById('notes-badge');
-    if (isNotesMode) {
-        if (btn) btn.classList.add('active');
-        if (badge) { badge.textContent = 'ON'; badge.classList.add('active'); }
-    } else {
-        if (btn) btn.classList.remove('active');
-        if (badge) { badge.textContent = 'OFF'; badge.classList.remove('active'); }
-    }
-};
-
-window.toggleYellowMode = function() {
-    isYellowMode = !isYellowMode;
-};
-
-window.autoFillNotes = function() {
-    console.log("一键备选功能已停用");
-};
-
 window.ultimateInputNumber = function(num) {
     if (selectedIndex === -1 || isPaused) return;
-    if (initialBoard[selectedIndex] !== 0) return;
+    
+    // 🟢 补充：锁定初始盘面 或 已经填对的格子，防止误触修改
+    if (initialBoard[selectedIndex] !== 0 || board[selectedIndex] === solution[selectedIndex]) {
+        return;
+    }
 
     if (typeof saveHistory === 'function') saveHistory();
 
@@ -447,17 +429,19 @@ window.ultimateInputNumber = function(num) {
             return;
         } else {
             score += 50;
-            const scoreEl = document.getElementById('score-val');
+            const scoreEl = document.getElementById('score');
             if (scoreEl) scoreEl.textContent = score;
         }
         notes[selectedIndex].clear();
     }
     updateUI();
     
+    // 🟢 补充：通关时带上最终得分提示
     if (!board.includes(0) && board.every((val, i) => val === solution[i])) {
         clearInterval(timerInterval);
-        setTimeout(() => alert(`🎉 恭喜！终极杀手数独通关！用时: ${document.getElementById('timer').textContent}`), 100);
+        setTimeout(() => {
+            alert(`🎉 恭喜！终极杀手数独通关！\n用时: ${document.getElementById('timer').textContent}\n最终得分: ${score}`);
+        }, 100);
     }
 };
-
-} // <-- 补上了这个闭合大括号，完美解决语法错误
+}

@@ -527,7 +527,7 @@ function updateUI() {
     });
 
     renderLinesAndChains();
-    updateNumpadState();
+   
 }
 
 function renderLinesAndChains() {
