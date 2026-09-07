@@ -360,12 +360,6 @@ body {
     border-radius: 6px; font-size: 10px; max-height: 80px; overflow-y: auto; text-align: left;
 }
 
-@media (max-width: 720px) {
-    body { padding: 4px; align-items: flex-start; }
-    .sudoku-container { flex-direction: column; padding: 8px; gap: 12px; background: transparent; box-shadow: none; }
-    .left-panel, .right-panel { width: 100%; max-width: 100%; }
-}
-
 /* ==================== 手机端专属响应式布局调整 ==================== */
 @media screen and (max-width: 600px) {
     /* 1. 整体容器：减小内边距，让内容整体靠上 */
