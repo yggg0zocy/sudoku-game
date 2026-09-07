@@ -392,15 +392,9 @@
     }
 
     /* 💡 九宫格放大：宽度从 92vw / 360px 提升到 96vw / 410px，充分利用两边空间 */
-    #sudoku-board, .sudoku-board {
-        width: 96vw !important;
-        height: 96vw !important;
-        max-width: 410px !important;
-        max-height: 410px !important;
-    }
-    .board-wrapper {
-        width: 96vw !important;
-        max-width: 410px !important;
+    #sudoku-board, .sudoku-board, .board-wrapper {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
     }
 
     .header-info, .stats-bar, .tools-bar, .numpad, .number-pad, .new-game-btn {
@@ -422,19 +416,21 @@
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
-        margin-top: 5px !important; 
-        margin-bottom: 5px !important;
+        margin-top: 3px !important;  /* 离九宫格极近 */
+        margin-bottom: 5px !important; /* 离下方工具栏极近 */
         padding: 0 4px !important;
         font-size: 16px !important; 
-        line-height: 1.3 !important;
+        line-height: 1.2 !important;
     }
 
+    /* 💡 3. 工具栏：把上下外边距也清零，防止它把间距撑开 */
     .tools-bar {
         display: flex !important;
         justify-content: center !important;
         gap: 8px !important; 
-        margin: 4px 0 !important;
+        margin: 1px 0 !important; /* 上下外边距压到最小 */
     }
+
     .tools-bar .tool-btn {
         width: 48px !important;
         height: 32px !important;
@@ -450,13 +446,13 @@
         display: flex !important;
         flex-wrap: wrap !important;
         justify-content: center !important;
-        gap: 8px !important; /* 拉近上下左右的紧凑距离 */
-        margin: 6px 0 !important; 
+        gap: 6px !important; /* 拉近上下左右的紧凑距离 */
+        margin: 5px 0 !important; 
     }
 
     .num-btn {
         flex: 0 0 18% !important; /* 每行放5个时大概占18%宽度 */
-        height: 58px !important;
+        height: 55px !important;
         font-size: 18px !important;
         font-weight: bold;
         padding: 0 !important;
