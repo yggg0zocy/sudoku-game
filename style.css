@@ -246,7 +246,7 @@ body {
 .red-line-btn.active { background-color: #ef4444 !important; color: #fff !important; }
 
 /* 3 列数字键盘样式 */
-.numpad {
+.numpad, .number-pad {
     display: block !important;
     width: 100% !important;
     padding-left: 12px !important;
@@ -388,24 +388,28 @@ body {
         align-items: center;
     }
 
-    /* 2. 棋盘尺寸 */
-    .sudoku-board {
+    /* 2. 棋盘尺寸（用 id 选择器，避免被桌面端 #sudoku-board 的 width:100% 因优先级更高而覆盖） */
+    #sudoku-board, .sudoku-board {
         width: 92vw !important;
         height: 92vw !important;
         max-width: 360px !important;
         max-height: 360px !important;
         margin-bottom: 0 !important; 
     }
+    .board-wrapper {
+        width: 92vw !important;
+        max-width: 360px !important;
+    }
 
     /* 统一所有控制行的最大宽度 */
-    .status-bar, .game-info, .tools-bar, .action-tools, .secondary-controls, .numpad, .number-pad, .new-game-btn, .action-btn {
+    .header-info, .stats-bar, .tools-bar, .numpad, .number-pad, .new-game-btn {
         width: 92vw !important;
         max-width: 360px !important;
         box-sizing: border-box;
     }
 
     /* 3. 错误行：清空上下边距，紧紧贴住上下两端 */
-    .status-bar, .game-info {
+    .header-info, .stats-bar {
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
@@ -415,14 +419,20 @@ body {
         line-height: 1.2 !important;
     }
 
+    /* 顶部模式切换按钮组：手机端也居中并允许换行 */
+    .mode-switch-group {
+        justify-content: center !important;
+        gap: 6px !important;
+    }
+
     /* 4. 四个功能按钮：居中、拉近 */
-    .tools-bar, .action-tools, .secondary-controls {
+    .tools-bar {
         display: flex !important;
         justify-content: center !important;
         gap: 6px !important; 
         margin: 0 !important;
     }
-    .tools-bar button, .action-tools button {
+    .tools-bar .tool-btn {
         width: 48px !important;
         height: 32px !important;
         border-radius: 6px;
