@@ -393,7 +393,7 @@
 
     /* 💡 九宫格放大：宽度从 92vw / 360px 提升到 96vw / 410px，充分利用两边空间 */
     #sudoku-board, .sudoku-board, .board-wrapper {
-        margin-bottom: 0 !important;
+        margin-bottom: -4px !important; /* 微微往上吸，把和错误行的距离拉近 */
         padding-bottom: 0 !important;
     }
 
@@ -416,20 +416,21 @@
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
-        margin-top: 0px !important;    /* 上外边距归零 */
-        margin-bottom: 0px !important; /* 下外边距归零 */
-        padding-top: 0px !important;   /* 上内边距清空 */
-        padding-bottom: 0px !important;/* 下内边距清空 */
+        margin-top: 0px !important;    
+        margin-bottom: 0px !important; 
+        padding-top: 0px !important;   
+        padding-bottom: 0px !important;
         font-size: 16px !important; 
-        line-height: 1.0 !important;   /* 行高压到最小，消除文字自带的上下空白 */
+        line-height: 1.0 !important;   
     }
 
-    /* 💡 3. 工具栏：把上下外边距也清零，防止它把间距撑开 */
+    /* 💡 2. 功能区（.tools-bar）：把下边距清空或设为负数，让它紧紧贴住下方的数字键 */
     .tools-bar {
         display: flex !important;
         justify-content: center !important;
         gap: 8px !important; 
-        margin: 0px !important; /* 上下外边距压到最小 */
+        margin-top: 2px !important;
+        margin-bottom: -2px !important; /* 👈 用负外边距把数字键往上拉 */
     }
 
     .tools-bar .tool-btn {
@@ -448,7 +449,8 @@
         flex-wrap: wrap !important;
         justify-content: center !important;
         gap: 6px !important; 
-        margin: 5px 0 !important; 
+        margin-top: 0px !important;    /* 顶部间距清零 */
+        margin-bottom: 5px !important; 
     }
 
     .num-btn {
