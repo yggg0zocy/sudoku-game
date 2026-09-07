@@ -362,30 +362,22 @@ body {
 
 /* ==================== 手机端专属响应式布局调整 ==================== */
 @media (max-width: 720px) {
-    /* 1. 整体页面：压缩上下内边距，让内容紧贴顶部 */
+    /* 1. 整体页面：顶部留出刚好 5px 的呼吸感，不贴死 */
     body { 
-        padding: 2px 6px !important; 
+        padding: 5px 8px 10px 8px !important; 
         align-items: flex-start !important; 
     }
 
-    /* 2. 主容器：纵向排列，彻底消除上下无效留白 */
     .sudoku-container {
         flex-direction: column;
         padding: 0 !important;
-        gap: 4px !important; /* 模块之间的间距压到最小 */
+        gap: 2px !important;
         background: transparent;
         box-shadow: none;
         width: 100%;
         box-sizing: border-box;
     }
 
-    /* 3. 顶部模式选择区域：贴顶显示 */
-    .mode-selector, .tabs-container, .game-modes {
-        margin-top: 0 !important;
-        margin-bottom: 4px !important;
-    }
-
-    /* 4. 左右面板通栏 */
     .left-panel, .right-panel { 
         width: 100% !important; 
         max-width: 100% !important;
@@ -395,44 +387,67 @@ body {
         align-items: center;
     }
 
-    /* 5. 棋盘尺寸与紧随的下方间距 */
+    /* 2. 棋盘大小控制 */
     .sudoku-board {
         width: 92vw !important;
         height: 92vw !important;
         max-width: 360px !important;
         max-height: 360px !important;
-        margin-bottom: 2px !important; /* 🟢 极度拉近棋盘与下方状态栏的距离 */
+        margin-bottom: 2px !important; 
     }
 
-    /* 6. 状态栏和功能区宽度统一 */
+    /* 统一所有控制行的最大宽度，确保它们上下居中对齐 */
     .status-bar, .game-info, .tools-bar, .action-tools, .secondary-controls, .numpad, .number-pad, .new-game-btn, .action-btn {
         width: 92vw !important;
         max-width: 360px !important;
         box-sizing: border-box;
     }
 
-    /* 7. 内部各行组件的极简间距 */
+    /* 3. 错误/得分/时间这行：变量均匀隔开，且拉近与上下的距离 */
     .status-bar, .game-info {
-        margin: 2px 0 4px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important; /* 让错误、得分、时间三者左右撑开 */
+        align-items: center !important;
+        margin: 2px auto 4px auto !important; /* 上下距离压缩 */
+        padding: 0 4px !important;
+        font-size: 13px;
     }
 
+    /* 4. 四个功能按钮：减小间距、整体居中 */
     .tools-bar, .action-tools, .secondary-controls {
-        display: flex;
-        justify-content: space-between;
+        display: flex !important;
+        justify-content: center !important; /* 整体居中 */
+        gap: 8px !important; /* 控制四个按钮之间的间距，不再离太开 */
         margin-bottom: 4px !important;
     }
-    
-    .numpad, .number-pad {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px !important; 
+    .tools-bar button, .action-tools button {
+        width: 54px !important; /* 给个固定或自适应适中的宽度 */
+        height: 36px !important;
+        border-radius: 8px;
     }
 
-    /* 8. 按钮高度及手感优化 */
+    /* 5. 数字那一排：调窄宽度，彻底解决 3、4 和 6、7 粘连的问题，强制均分间距 */
+    .numpad, .number-pad {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 4px !important; /* 强制每个数字键之间保留固定间距，修复粘连 */
+        margin-bottom: 6px !important; 
+    }
+
     .num-btn {
-        flex: 1;
-        height: 44px;
-        font-size: 19px;
+        flex: 1 !important;
+        min-width: 0 !important; /* 防止内容把按钮撑变形 */
+        height: 42px !important;
+        font-size: 18px !important;
         font-weight: bold;
+        padding: 0 !important; /* 去除多余内边距，防止挨太近 */
+        border-radius: 6px;
+    }
+
+    /* 底部新游戏按钮 */
+    .new-game-btn, .action-btn {
+        margin-top: 2px !important;
+        padding: 10px !important;
+        font-size: 15px;
     }
 }
