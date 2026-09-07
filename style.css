@@ -1,0 +1,438 @@
+:root {
+    --primary-blue: #344860;
+    --accent-blue: #4b6cb7;
+    --bg-light: #f3f6fa;
+    --cell-border-light: #bec6d4;
+    --cell-border-dark: #344860;
+    --cell-bg-selected: #b3d4ff;
+    --cell-bg-highlight: #e2ecf8;
+    --cell-bg-same-num: #c3d9ff;
+    --text-given: #2e3a4e;
+    --text-user: #033cb0;
+    --text-error: #dc2626;
+    --bg-error: #fee2e2;
+    --text-notes: #6c757d;
+    --note-yellow-bg: #fef08a;
+    --note-yellow-text: #854d0e;
+}
+
+* { box-sizing: border-box; touch-action: manipulation; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background-color: #f8fafc;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 恢复最初舒适的容器大小，绝不撑大 */
+.sudoku-container {
+    display: flex;
+    gap: 24px;
+    max-width: 920px;
+    width: 100%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    align-items: flex-start;
+}
+
+.left-panel { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    gap: 4px;
+}
+
+.mode-switch-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.mode-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.mode-btn:hover { background-color: #e2e8f0; }
+.mode-btn.active {
+    background-color: #4b6cb7;
+    color: white;
+    border-color: #4b6cb7;
+}
+
+.board-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+#sudoku-board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--cell-border-dark);
+    user-select: none;
+    background: #fff;
+    box-sizing: border-box;
+}
+
+#line-svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+#line-svg.active { pointer-events: auto; cursor: crosshair; }
+
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(18px, 3.5vw, 28px);
+    font-weight: 600;
+    border: 1px solid var(--cell-border-light);
+    cursor: pointer;
+    background-color: #fff;
+    position: relative;
+    box-sizing: border-box;
+    transition: background-color 0.1s, color 0.1s;
+}
+
+.cell:nth-child(3n) { border-right: 2px solid var(--cell-border-dark); }
+.cell:nth-child(9n) { border-right: 1px solid var(--cell-border-light); }
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--cell-border-dark); }
+
+.cell.diagonal-cell { background-color: rgba(75, 108, 183, 0.03); }
+.cell.given { color: var(--text-given); font-weight: bold; }
+.cell.user-entered { color: var(--text-user); }
+.cell.invalid { color: var(--text-error) !important; background-color: var(--bg-error) !important; font-weight: bold; }
+.cell.selected { background-color: var(--cell-bg-selected) !important; }
+.cell.highlighted { background-color: var(--cell-bg-highlight); }
+.cell.same-num { background-color: #c3d9ff !important; }
+
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
+.note-num {
+    font-size: clamp(9px, 1.6vw, 13px);
+    color: var(--text-notes);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    pointer-events: auto;
+}
+.note-num.highlighted-note { background-color: #8adb8e !important; color: #fff !important; font-weight: bold; }
+.note-num.yellow-marked { background-color: var(--note-yellow-bg) !important; color: var(--note-yellow-text) !important; font-weight: bold; }
+.note-num.chain-purple { background-color: #c084fc !important; color: #fff !important; font-weight: bold; }
+.note-num.chain-green { background-color: #4ade80 !important; color: #fff !important; font-weight: bold; }
+
+/* 右侧面板整体布局调整 */
+.right-panel {
+    width: 320px !important;
+    min-width: 320px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-self: stretch;
+    padding-top: 48px !important; 
+    gap: 15px;
+}
+
+/* 统计栏（时间、错误、得分）样式微调 */
+.stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #555;
+    background: #f8fafc;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+.stats-bar .score { font-size: 15px; font-weight: bold; color: #333; }
+
+.tools-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+/* 工具按钮通用样式 */
+.tool-btn {
+    width: 46px !important;
+    height: 46px !important;
+    border-radius: 8px !important;
+    border: 1px solid #dcdcdc !important;
+    cursor: pointer;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px !important;
+    margin-right: 10px !important;
+    background-color: #ffffff;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.tool-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    border-color: #c0c0c0 !important;
+    background-color: #e2e8f0;
+}
+
+.tool-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    background-color: #f5f5f5 !important;
+}
+
+.tool-btn:last-child {
+    margin-right: 0 !important;
+}
+
+.tool-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+/* 工具按钮被选中（激活）时的样式 */
+.tool-btn.active {
+    background-color: #d8b4fe !important;
+    color: #581c87 !important;
+    border-color: #a855f7 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.badge {
+    position: absolute; top: -4px; right: -4px;
+    background: #1976d2; color: white;
+    font-size: 8px; font-weight: bold; padding: 1px 4px; border-radius: 8px;
+}
+
+.yellow-btn { background-color: #fef9c3 !important; color: #a16207 !important; border: 1px solid #fef08a !important; }
+.yellow-btn.active { background-color: #eab308 !important; color: #fff !important; }
+
+.red-line-btn { background-color: #fee2e2 !important; color: #dc2626 !important; border: 1px solid #fca5a5 !important; }
+.red-line-btn.active { background-color: #ef4444 !important; color: #fff !important; }
+
+/* 3 列数字键盘样式 */
+.numpad {
+    display: block !important;
+    width: 100% !important;
+    padding-left: 12px !important;
+    margin-top: 15px !important;
+    margin-bottom: 12px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* 数字按钮默认样式（平时带有好看的底色） */
+.num-btn {
+    float: left !important;
+    width: 31% !important;
+    margin-right: 3% !important;
+    margin-bottom: 8px !important;
+    height: 66px !important; 
+    font-size: 22px !important; 
+    font-weight: bold;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;  /* 按钮默认背景色 */
+    color: #1e293b !important;
+    cursor: pointer;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.2s ease !important;
+    position: relative; /* 必须有 */
+}
+
+/* 数字按钮悬停与点击效果 */
+.num-btn:hover { 
+    background-color: #e2ebf8 !important; 
+    border-color: #94a3b8 !important;
+}
+.num-btn:hover::after {
+    color: #e2ebf8 !important; /* 让悬停时的√颜色 = 悬停背景色，彻底隐形 */
+}
+.num-btn:active { 
+    background-color: #cbd5e1 !important; 
+}
+.num-btn:active::after {
+    color: #cbd5e1 !important; 
+}
+/* 默认状态下的勾：颜色和初始背景或默认文字融为一体（隐形） */
+.num-btn::after {
+    content: "✓";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #f8fafc !important; /* 平时隐形 */
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.2s ease !important; /* 让颜色变化更顺滑 */
+}
+
+/* 填满 9 个后的状态：变成禁用/完成颜色 */
+.num-btn.completed {
+    opacity: 0.5 !important;           /* 降低透明度（半透明效果），让它看起来变淡、处于非活跃状态 */
+    background-color: #bbcce2 !important;/* 将背景颜色变成浅灰色，视觉上与未完成的按钮区分开 */
+    color: #94a3b8 !important;         /* 将文字颜色变成浅灰色，使其不那么显眼 */
+    border-color: #cbd5e1 !important;  /* 将边框颜色也改成浅灰色，保持整体边框协调 */
+    cursor: not-allowed !important;    /* 鼠标悬停时显示“禁止通行”的小图标指针，提示用户该数字已完成 */
+    box-shadow: none !important;       /* 移除按钮原本的阴影效果，让它看起来是平整凹陷的 */
+}
+/* 保证每行第 3 个按钮右边距为 0，防止错位 */
+.num-btn:nth-child(3n) {
+    margin-right: 0 !important;
+}
+
+
+/* “新游戏”按钮推到底部 */
+.new-game-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    background-color: #4c73bf;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: auto;
+}
+.new-game-btn:hover { background-color: #3b5f9e; }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); display: none;
+    justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-box {
+    background: white; padding: 24px; border-radius: 12px;
+    width: 300px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.modal-buttons {
+    display: flex; gap: 12px; margin-top: 20px; justify-content: center;
+}
+.modal-btn {
+    padding: 8px 16px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer;
+}
+.modal-btn.confirm { background: #dc2626; color: white; }
+.modal-btn.cancel { background: #e2e8f0; color: #475569; }
+
+.session-log-view {
+    margin-top: 6px; background: #1e293b; color: #38bdf8; padding: 6px 8px;
+    border-radius: 6px; font-size: 10px; max-height: 80px; overflow-y: auto; text-align: left;
+}
+
+@media (max-width: 720px) {
+    body { padding: 4px; align-items: flex-start; }
+    .sudoku-container { flex-direction: column; padding: 8px; gap: 12px; background: transparent; box-shadow: none; }
+    .left-panel, .right-panel { width: 100%; max-width: 100%; }
+}
+
+/* ==================== 手机端专属响应式布局调整 ==================== */
+@media screen and (max-width: 600px) {
+    /* 1. 整体容器纵向排列 */
+    body, .game-container, .main-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    /* 2. 棋盘居中 */
+    .sudoku-board {
+        width: 90vw;
+        height: 90vw;
+        max-width: 380px;
+        max-height: 380px;
+        margin-bottom: 12px;
+    }
+
+    /* 3. 控制面板/右侧栏整体下移 */
+    .control-panel, .right-sidebar, .functions-area {
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* 4. 四个功能按钮（撤销、擦除、笔记等）：放在数字键上面，横向排列 */
+    .tools-bar, .action-tools, .secondary-controls {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 8px;
+        margin-bottom: 6px; /* 和下方的数字键保持一点间距 */
+    }
+
+    /* 5. 数字键盘：整整齐齐排成 1 行 */
+    .numpad, .number-pad {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 4px;
+        margin-bottom: 16px; /* 🟢 让数字键和最底部的“新游戏”拉开明显距离 */
+    }
+
+    .num-btn {
+        flex: 1;
+        height: 44px;
+        font-size: 18px;
+        border-radius: 6px;
+    }
+
+    /* 6. 最底部的“新游戏”等按钮：稍微离开一点，独立在最下方 */
+    .bottom-actions, .primary-controls {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 8px; 
+    }
+
+    .new-game-btn, .action-btn {
+        width: 100%;
+        max-width: 250px;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+    }
+}
