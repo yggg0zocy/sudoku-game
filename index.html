@@ -70,7 +70,7 @@
 
         .mode-switch-group {
             display: flex;
-            gap: 12px;
+            gap: 15px;  //顶部按钮之间的距离
             flex-wrap: wrap;
         }
         .mode-btn {
@@ -362,7 +362,7 @@
         }
 
         /* ==================== 手机端专属响应式布局调整 ==================== */
-        @media (max-width: 720px) {
+     @media (max-width: 720px) {
     body { 
         padding: 8px 12px 10px 8px !important; 
         align-items: flex-start !important; 
@@ -371,7 +371,6 @@
     .sudoku-container {
         flex-direction: column;
         padding: 0 !important;
-        gap: 6px !important;
         background: transparent;
         box-shadow: none;
         width: 100%;
@@ -387,9 +386,9 @@
         align-items: center;
     }
 
-    /* 1. 顶部模式切换栏与九宫格之间增加 8px 距离 */
-    .header-info, .mode-switch-group, .board-wrapper {
-        margin-bottom: 8px !important;
+    /* 1. 顶部模式切换栏与九宫格之间：独立留下 8px 下边距 */
+    .header-info, .mode-switch-group {
+        margin-bottom: 6px !important;
     }
 
     #sudoku-board, .sudoku-board {
@@ -415,18 +414,17 @@
         align-items: center !important;
         padding: 0 4px !important;
         font-size: 13px;
-        line-height: 1.2 !important;
     }
 
-    /* 2. 错误那一行（状态栏）到九宫格的距离翻一倍 */
+    /* 2. 状态栏）：独立控制与九宫格的距离，且字体放大半倍（13px -> ~16px） */
     .stats-bar {
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
-        margin-top: 16px !important; /* 间距翻倍 */
+        margin-top: 12px !important; /* 单独控制这一行的上方距离 */
         padding: 0 4px !important;
-        font-size: 13px;
-        line-height: 1.2 !important;
+        font-size: 16px !important;  /* 字体放大半倍 */
+        line-height: 1.3 !important;
     }
 
     .tools-bar {
@@ -445,10 +443,10 @@
         fill: #333 !important;
     }
 
-    /* 4. 手机端直接屏蔽/隐藏“对勾”按钮（假设其带有 check 类或特定属性，可按实际类名微调） */
+    /* 4. 手机端直接隐藏第四个对勾按钮 */
+    .tools-bar .tool-btn:nth-child(4),
     .tools-bar .tool-btn.check-btn, 
-    .tools-bar .tool-btn[data-action="check"],
-    .tools-bar .tool-btn:last-child { 
+    .tools-bar .tool-btn[data-action="check"] { 
         display: none !important; 
     }
 
@@ -457,7 +455,7 @@
         display: flex !important;
         justify-content: space-between !important;
         gap: 2px !important;
-        margin: 8px 0 !important; 
+        margin: 6px 0 !important; 
     }
 
     .num-btn {
@@ -473,7 +471,7 @@
         color: inherit;
     }
 
-    /* 3. 数字按钮 3/4 之间、8/9 之间再放大一点点（通过给第 3 个和第 8 个按钮加额外的右边距） */
+    /* 3. 仅单独把 3/4 之间、8/9 之间的缝隙点对点放大，不影响其他键 */
     .num-btn:nth-child(3),
     .num-btn:nth-child(8) {
         margin-right: 10px !important; 
@@ -483,9 +481,9 @@
         margin-right: 0 !important;
     }
 
-    /* “新游戏”按钮往下显著拉开距离 */
+    /* 新游戏按钮位置保持独立下移 */
     .new-game-btn, .action-btn {
-        margin-top: 16px !important; 
+        margin-top: 14px !important; 
         padding: 10px !important;
         font-size: 15px;
     }
