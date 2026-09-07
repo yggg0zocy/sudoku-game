@@ -388,7 +388,7 @@
 
     /* 1. 顶部模式切换栏与九宫格之间：独立留下 8px 下边距 */
     .header-info, .mode-switch-group {
-        margin-bottom: 6px !important;
+        margin-bottom: 5px !important;
     }
 
     /* 💡 九宫格放大：宽度从 92vw / 360px 提升到 96vw / 410px，充分利用两边空间 */
@@ -411,16 +411,17 @@
         font-size: 13px;
     }
 
-    /* 2. 状态栏：独立控制与九宫格的距离，字体放大半倍 */
+    /* 💡 错误/时间/计分那一行：彻底把上下间距和行高压缩到极致 */
     .stats-bar {
         display: flex !important;
         justify-content: space-around !important; 
         align-items: center !important;
-        margin-top: 3px !important;  /* 离九宫格极近 */
-        margin-bottom: 5px !important; /* 离下方工具栏极近 */
-        padding: 0 4px !important;
+        margin-top: 0px !important;    /* 上外边距归零 */
+        margin-bottom: 0px !important; /* 下外边距归零 */
+        padding-top: 0px !important;   /* 上内边距清空 */
+        padding-bottom: 0px !important;/* 下内边距清空 */
         font-size: 16px !important; 
-        line-height: 1.2 !important;
+        line-height: 1.0 !important;   /* 行高压到最小，消除文字自带的上下空白 */
     }
 
     /* 💡 3. 工具栏：把上下外边距也清零，防止它把间距撑开 */
