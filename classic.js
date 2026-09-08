@@ -59,6 +59,7 @@ function classicStartNewGame() {
         errorCount = 0;
         score = 0;
         historyStack = [];
+        isGameOver = false;
         
         // ==========================================
         // 🧹 【全新替换】重新出题/开新局时：彻底擦除所有按钮的 completed 状态，防止键盘锁死
@@ -283,7 +284,6 @@ function classicInputNumber(num) {
             updateNumberCompletionStatus();
         }
 
-        if (currentGameMode !== 'blank') checkWin();
         // 填入数字后，自动清除同行、同列、同宫其他格子的该备选数
         const row = Math.floor(selectedIndex / 9);
         const col = selectedIndex % 9;
@@ -603,21 +603,19 @@ function getNoteCenterPosition(cellIndex, num) {
 }
 
 function checkWin() {
+    if (isGameOver) return;
     if (!board.includes(0) && board.every((val, i) => val === solution[i])) {
+        isGameOver = true;
         clearInterval(timerInterval);
         SessionLog.record('通关成功', `用时: ${document.getElementById('timer').textContent}，得分: ${score}`);
-        
-        // 优化：给一点微小的宏任务延时，让浏览器的点击事件彻底释放后再弹窗
+
         setTimeout(() => {
-            setTimeout(() => {
-                alert(`🎉 恭喜！成功通关！\n用时: ${document.getElementById('timer').textContent}\n最终得分: ${score}`);
-                
-                // 点击确定后，自动触发新游戏
-                if (typeof classicStartNewGame === 'function') {
-                    classicStartNewGame();
-                }
-            }, 50);
-        }, 100);
+            alert(`🎉 恭喜！成功通关！\n用时: ${document.getElementById('timer').textContent}\n最终得分: ${score}`);
+            // 点击确定后，自动触发新游戏
+            if (typeof classicStartNewGame === 'function') {
+                classicStartNewGame();
+            }
+        }, 150);
     }
 }
 

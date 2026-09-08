@@ -527,11 +527,13 @@ window.ultimateInputNumber = function(num) {
     updateUI();
     
     // 🟢 补充：通关时带上最终得分提示
-    if (!board.includes(0) && board.every((val, i) => val === solution[i])) {
+    if (!isGameOver && !board.includes(0) && board.every((val, i) => val === solution[i])) {
+        isGameOver = true;
         clearInterval(timerInterval);
         setTimeout(() => {
             alert(`🎉 恭喜！终极杀手数独通关！\n用时: ${document.getElementById('timer').textContent}\n最终得分: ${score}`);
-        }, 100);
+            initUltimate();   // 点确定后自动开新局
+        }, 150);
     }
 };
 }

@@ -30,6 +30,7 @@ window.initDiagonal = function() {
         errorCount = 0;
         score = 0;
         historyStack = [];
+        isGameOver = false;
         
         const errEl = document.getElementById('error-count');
         const scoreEl = document.getElementById('score-val');
@@ -434,8 +435,12 @@ window.diagonalInputNumber = function(num){
     }
     updateUI();
     
-    if (!board.includes(0) && board.every((val, i) => val === solution[i])) {
+    if (!isGameOver && !board.includes(0) && board.every((val, i) => val === solution[i])) {
+        isGameOver = true;
         clearInterval(timerInterval);
-        setTimeout(() => alert(`🎉 恭喜！对角线数独通关！用时: ${document.getElementById('timer').textContent}`), 100);
+        setTimeout(() => {
+            alert(`🎉 恭喜！对角线数独通关！\n用时: ${document.getElementById('timer').textContent}`);
+            initDiagonal();   // 点确定后自动开新局
+        }, 150);
     }
 };

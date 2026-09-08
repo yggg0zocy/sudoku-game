@@ -20,6 +20,7 @@ let secondsElapsed = 0;
 let isChainMode = false;
 let chainNodes = []; 
 let chainLines = [];
+let isGameOver = false;   // 通关标志：防止弹窗重复触发
 
 // ================ 1. 拦截用户的切换请求，弹出确认弹窗 ====================
 window.requestSwitchMode = function(mode) {
@@ -189,6 +190,8 @@ window.inputNumber = function(num) {
             }
             break;
     }
+    // 填数后检查行/列/宫是否完成，完成则播放波浪动画
+    checkUnitCompletionAnimation(selectedIndex);
 };
 // ==================== 6. 公共工具函数（撤销、暂停等） ====================
 function saveHistory() {
@@ -219,8 +222,6 @@ function togglePause() {
     const pauseBtn = document.getElementById('pause-btn');
     if (pauseBtn) pauseBtn.textContent = isPaused ? '▶' : '❚❚';
 }
-
-
 // ====================7. 数字填满9个后的全局状态更新 ====================
 window.updateNumberCompletionStatus = function() {
     // 1. 统计当前棋盘上每个数字（1到9）各自被填了多少个
@@ -257,96 +258,34 @@ window.updateNumberCompletionStatus = function() {
         }
     });
 };
-// ====================7. 全局锁定已填对的格子 ====================
-window.inputNumber = function(num) {
-    if (isPaused || selectedIndex === -1) return;
-    
-    if (currentGameMode !== 'blank') {
-        if (initialBoard[selectedIndex] !== 0 || board[selectedIndex] === solution[selectedIndex]) {
-            return; // 已经锁定的格子，直接拦截，不准修改！
-        }
-    }
-    
-    switch (currentGameMode) {
-        case 'classic':
-        case 'blank':
-            if (typeof classicInputNumber === 'function') {
-                classicInputNumber(num);
-            }
-            break;
-        case 'diagonal':
-            if (typeof diagonalInputNumber === 'function') {
-                diagonalInputNumber(num);
-            }
-            break;
-        case 'ultimate':
-            if (typeof ultimateInputNumber === 'function') {
-                ultimateInputNumber(num);
-            }
-            break;
-        default:
-            if (typeof classicInputNumber === 'function') {
-                classicInputNumber(num);
-            }
-            break;
-    }
-};
-//==================8. 检查并触发行列宫完成动效===========
-function checkAndAnimateCompletion(row, col) {
-    // 假设你的单元格 DOM 带有类似 data-row 和 data-col 属性，或者你可以根据索引直接获取
-    // 这里以标准网格查找为例：
-    const getCell = (r, c) => {
-        const board = document.getElementById('sudoku-board');
-        if (!board) return null;
-        // 如果你的格子是按顺序排列的 0-80
-        return board.children[r * 9 + c];
-    };
+// ==================== 8. 行列宫完成动画 ====================
+function getRowIndices(i)  { const r = Math.floor(i / 9) * 9; return Array.from({length: 9}, (_, k) => r + k); }
+function getColIndices(i)  { const c = i % 9; return Array.from({length: 9}, (_, k) => k * 9 + c); }
+function getBoxIndices(i)  {
+    const br = Math.floor(i / 27) * 27, bc = Math.floor((i % 9) / 3) * 3, arr = [];
+    for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) arr.push(br + r * 9 + bc + c);
+    return arr;
+}
 
-    const triggerAnim = (cells) => {
-        cells.forEach(cell => {
-            if (!cell) return;
-            cell.classList.remove('cell-completed-anim');
-            void cell.offsetWidth; // 触发重绘
-            cell.classList.add('cell-completed-anim');
-        });
+function isUnitSolved(indices) {
+    return indices.every(idx => board[idx] >= 1 && board[idx] <= 9 && board[idx] === solution[idx]);
+}
+
+function animateUnit(indices) {
+    indices.forEach((idx, k) => {
+        const cell = document.querySelector(`.cell[data-index="${idx}"]`);
+        if (!cell) return;
         setTimeout(() => {
-            cells.forEach(cell => {
-                if (cell) cell.classList.remove('cell-completed-anim');
-            });
-        }, 500);
-    };
+            cell.classList.remove('unit-complete');
+            void cell.offsetWidth;
+            cell.classList.add('unit-complete');
+            setTimeout(() => cell.classList.remove('unit-complete'), 750);
+        }, k * 55);
+    });
+}
 
-    // 1. 检查当前行 (row) 是否填满
-    let rowCells = [];
-    let rowComplete = true;
-    for (let c = 0; c < 9; c++) {
-        let cell = getCell(row, c);
-        if (!cell || !cell.textContent.trim()) { rowComplete = false; break; }
-        rowCells.push(cell);
-    }
-    if (rowComplete) triggerAnim(rowCells);
-
-    // 2. 检查当前列 (col) 是否填满
-    let colCells = [];
-    let colComplete = true;
-    for (let r = 0; r < 9; r++) {
-        let cell = getCell(r, col);
-        if (!cell || !cell.textContent.trim()) { colComplete = false; break; }
-        colCells.push(cell);
-    }
-    if (colComplete) triggerAnim(colCells);
-
-    // 3. 检查当前 3x3 宫是否填满
-    let boxRowStart = Math.floor(row / 3) * 3;
-    let boxColStart = Math.floor(col / 3) * 3;
-    let boxCells = [];
-    let boxComplete = true;
-    for (let r = boxRowStart; r < boxRowStart + 3; r++) {
-        for (let c = boxColStart; c < boxColStart + 3; c++) {
-            let cell = getCell(r, c);
-            if (!cell || !cell.textContent.trim()) { boxComplete = false; break; }
-            boxCells.push(cell);
-        }
-    }
-    if (boxComplete) triggerAnim(boxCells);
+function checkUnitCompletionAnimation(cellIndex) {
+    if (cellIndex < 0 || cellIndex > 80) return;
+    [getRowIndices(cellIndex), getColIndices(cellIndex), getBoxIndices(cellIndex)]
+        .forEach(indices => { if (isUnitSolved(indices)) animateUnit(indices); });
 }
